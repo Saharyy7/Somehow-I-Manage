@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Calendar Replica</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap">
+</head>
+<body>
+
+    <div class="calendar-container">
+        <header class="calendar-header">
+            <div class="header-left">
+                <span class="icon">&#9776;</span>
+                <span class="logo">Calendar</span>
+            </div>
+            <div class="header-center">
+                <button class="nav-button">Today</button>
+                <div class="nav-arrows">
+                    <span class="icon">&lt;</span>
+                    <span class="icon">&gt;</span>
+                </div>
+                <div class="current-date">
+                    <span class="month-year">August 2025</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="icon">&#128269;</span>
+                <span class="icon">&#9881;</span>
+                <button class="create-button">+ Create</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <div class="mini-calendar">
+                    <div class="mini-calendar-header">
+                        <span>August 2025</span>
+                    </div>
+                    <div class="mini-calendar-days">
+                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                    </div>
+                    <div class="mini-calendar-grid">
+                        <span class="day"></span>
+                        <span class="day"></span>
+                        <span class="day"></span>
+                        <span class="day"></span>
+                        <span class="day"></span>
+                        <span class="day">1</span>
+                        <span class="day">2</span>
+                        <span class="day">3</span>
+                        <span class="day">4</span>
+                        <span class="day">5</span>
+                        <span class="day">6</span>
+                        <span class="day current-day">7</span>
+                        </div>
+                </div>
+            </aside>
+
+            <main class="calendar-grid">
+                <div class="day-header">Sun</div>
+                <div class="day-header">Mon</div>
+                <div class="day-header">Tue</div>
+                <div class="day-header">Wed</div>
+                <div class="day-header">Thu</div>
+                <div class="day-header">Fri</div>
+                <div class="day-header">Sat</div>
+                <div class="day-cell">1</div>
+                <div class="day-cell">2</div>
+                <div class="day-cell">3</div>
+                <div class="day-cell">4</div>
+                <div class="day-cell">5</div>
+                <div class="day-cell">6</div>
+                <div class="day-cell">7</div>
+                <div class="day-cell">8</div>
+                <div class="day-cell">9</div>
+                <div class="day-cell">10</div>
+                <div class="day-cell">11</div>
+                <div class="day-cell">12</div>
+                <div class="day-cell">13</div>
+                <div class="day-cell">14</div>
+                <div class="day-cell">15</div>
+                <div class="day-cell">16</div>
+                <div class="day-cell">17</div>
+                <div class="day-cell">18</div>
+                <div class="day-cell">19</div>
+                <div class="day-cell today-cell">20</div>
+                <div class="day-cell">21</div>
+                <div class="day-cell">22</div>
+                <div class="day-cell">23</div>
+                <div class="day-cell">24</div>
+                <div class="day-cell">25</div>
+                <div class="day-cell">26</div>
+                <div class="day-cell">27</div>
+                <div class="day-cell">28</div>
+                <div class="day-cell">29</div>
+                <div class="day-cell">30</div>
+                <div class="day-cell">31</div>
+            </main>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,120 +1,76 @@
-const taskInput = document.getElementById("taskInput");
-const taskDate = document.getElementById("taskDate");
-const taskTag = document.getElementById("taskTag");
-const taskList = document.getElementById("taskList");
-const notesArea = document.getElementById("notesArea");
-const calendar = document.getElementById("calendar");
-const fontSelector = document.getElementById("fontSelector");
-const bgColorPicker = document.getElementById("bgColorPicker");
+document.addEventListener('DOMContentLoaded', () => {
+    const currentDateEl = document.querySelector('.current-date .month-year');
+    const prevButton = document.querySelector('.nav-arrows .icon:first-child');
+    const nextButton = document.querySelector('.nav-arrows .icon:last-child');
+    const todayButton = document.querySelector('.nav-button');
+    const calendarGrid = document.querySelector('.calendar-grid');
 
-// Load everything on start
-document.addEventListener("DOMContentLoaded", () => {
-  loadTasks();
-  loadNotes();
-  loadSettings();
+    let date = new Date(); // This object holds the current month and year
+
+    const renderCalendar = () => {
+        date.setDate(1); // Set the day to the 1st to get the correct start day of the week
+        const firstDayIndex = date.getDay(); // 0 for Sunday, 1 for Monday, etc.
+        const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+        const prevLastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
+
+        // Array of month names
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        // Update the header with the current month and year
+        currentDateEl.textContent = `${months[date.getMonth()]} ${date.getFullYear()}`;
+
+        // Clear the calendar grid before re-rendering
+        calendarGrid.innerHTML = '';
+        
+        // Add day headers (Sun, Mon, Tue, etc.)
+        const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        dayHeaders.forEach(header => {
+            const dayHeaderDiv = document.createElement('div');
+            dayHeaderDiv.classList.add('day-header');
+            dayHeaderDiv.textContent = header;
+            calendarGrid.appendChild(dayHeaderDiv);
+        });
+
+        // Previous month's days
+        for (let x = firstDayIndex; x > 0; x--) {
+            const prevDayCell = document.createElement('div');
+            prevDayCell.classList.add('day-cell');
+            prevDayCell.classList.add('prev-date');
+            prevDayCell.textContent = prevLastDay - x + 1;
+            calendarGrid.appendChild(prevDayCell);
+        }
+
+        // Current month's days
+        for (let i = 1; i <= lastDay; i++) {
+            const dayCell = document.createElement('div');
+            dayCell.classList.add('day-cell');
+            dayCell.textContent = i;
+
+            // Check if it's the current date
+            if (i === new Date().getDate() && date.getMonth() === new Date().getMonth() && date.getFullYear() === new Date().getFullYear()) {
+                dayCell.classList.add('today-cell');
+            }
+            
+            calendarGrid.appendChild(dayCell);
+        }
+    };
+
+    // Event listeners for navigation
+    prevButton.addEventListener('click', () => {
+        date.setMonth(date.getMonth() - 1);
+        renderCalendar();
+    });
+
+    nextButton.addEventListener('click', () => {
+        date.setMonth(date.getMonth() + 1);
+        renderCalendar();
+    });
+
+    todayButton.addEventListener('click', () => {
+        date = new Date();
+        renderCalendar();
+    });
+
+    // Initial render
+    renderCalendar();
 });
-
-// Add task
-function addTask() {
-  const text = taskInput.value.trim();
-  const date = taskDate.value;
-  const tag = taskTag.value;
-  if (!text) return;
-
-  const task = { text, date, tag, done: false };
-  saveTask(task);
-  renderTask(task);
-  taskInput.value = "";
-  taskDate.value = "";
-  taskTag.value = "default";
-}
-
-// Render task
-function renderTask(task) {
-  const li = document.createElement("li");
-  const span = document.createElement("span");
-  span.textContent = `${task.text} ${task.date ? "(" + task.date + ")" : ""}`;
-  span.style.color = task.tag;
-
-  if (task.done) li.classList.add("done");
-  if (task.date && new Date(task.date) < new Date() && !task.done) {
-    li.classList.add("overdue");
-  }
-
-  const actions = document.createElement("div");
-  const doneBtn = document.createElement("button");
-  doneBtn.textContent = task.done ? "Undo" : "Done";
-  doneBtn.onclick = () => toggleDone(task, li, doneBtn);
-
-  const delBtn = document.createElement("button");
-  delBtn.textContent = "Delete";
-  delBtn.style.background = "#dc3545";
-  delBtn.onclick = () => deleteTask(task, li);
-
-  actions.appendChild(doneBtn);
-  actions.appendChild(delBtn);
-  li.appendChild(span);
-  li.appendChild(actions);
-  taskList.appendChild(li);
-}
-
-// Save task
-function saveTask(task) {
-  const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  tasks.push(task);
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-
-// Load tasks
-function loadTasks() {
-  const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  tasks.forEach(renderTask);
-}
-
-// Toggle done
-function toggleDone(task, li, btn) {
-  let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  const index = tasks.findIndex(t => t.text === task.text && t.date === task.date);
-  tasks[index].done = !tasks[index].done;
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-  li.classList.toggle("done");
-  btn.textContent = tasks[index].done ? "Undo" : "Done";
-}
-
-// Delete task
-function deleteTask(task, li) {
-  let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  tasks = tasks.filter(t => !(t.text === task.text && t.date === task.date));
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-  li.remove();
-}
-
-// Notes
-function saveNotes() {
-  localStorage.setItem("notes", notesArea.value);
-}
-function loadNotes() {
-  notesArea.value = localStorage.getItem("notes") || "";
-}
-
-// Settings
-fontSelector.onchange = () => {
-  document.body.style.fontFamily = fontSelector.value;
-  localStorage.setItem("font", fontSelector.value);
-};
-bgColorPicker.oninput = () => {
-  document.body.style.background = bgColorPicker.value;
-  localStorage.setItem("bg", bgColorPicker.value);
-};
-function loadSettings() {
-  const font = localStorage.getItem("font");
-  const bg = localStorage.getItem("bg");
-  if (font) {
-    document.body.style.fontFamily = font;
-    fontSelector.value = font;
-  }
-  if (bg) {
-    document.body.style.background = bg;
-    bgColorPicker.value = bg;
-  }
-}
