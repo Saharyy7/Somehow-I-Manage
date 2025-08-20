@@ -1,54 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Productivity Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Playfair+Display&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calendar — Tasks</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div class="dashboard">
+  <header class="topbar">
+    <div class="left">
+      <div class="brand">
+        <div class="logo-dot"></div>
+        <span class="brand-text">Calendar</span>
+      </div>
+      <div class="nav">
+        <button id="prevBtn" class="icon-btn" aria-label="Previous period">‹</button>
+        <button id="todayBtn" class="pill">Today</button>
+        <button id="nextBtn" class="icon-btn" aria-label="Next period">›</button>
+        <div id="currentLabel" class="current-label"></div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="view-switch">
+        <button data-view="day" class="view-btn">Day</button>
+        <button data-view="week" class="view-btn">Week</button>
+        <button data-view="month" class="view-btn active">Month</button>
+      </div>
+      <input id="jumpToDate" type="date" class="date-input" />
+      <button id="openEventForm" class="primary">+ Create</button>
+    </div>
+  </header>
+
+  <div class="app">
     <aside class="sidebar">
-      <h2>Calendar</h2>
-      <input type="date" id="calendar">
-      
-      <h2>Settings</h2>
-      <label>Font:
-        <select id="fontSelector">
-          <option value="'Roboto', sans-serif">Roboto</option>
-          <option value="'Playfair Display', serif">Playfair Display</option>
-        </select>
-      </label>
-      <label>Background:
-        <input type="color" id="bgColorPicker" value="#f4f6f9">
-      </label>
+      <h3>Mini calendar</h3>
+      <input type="month" id="miniMonth" />
+      <p class="muted">Click a day to add an event. Use the top switcher for Day/Week/Month.</p>
+      <div class="legend">
+        <span class="legend-item" style="--c:#1a73e8"></span> Primary
+        <span class="legend-item" style="--c:#34a853"></span> Work
+        <span class="legend-item" style="--c:#fbbc05"></span> Personal
+        <span class="legend-item" style="--c:#ea4335"></span> Urgent
+      </div>
     </aside>
 
     <main class="main">
-      <section class="tasks">
-        <h1>Tasks</h1>
-        <div class="task-input">
-          <input type="text" id="taskInput" placeholder="Enter a task">
-          <input type="date" id="taskDate">
-          <select id="taskTag">
-            <option value="default">Default</option>
-            <option value="red">Red</option>
-            <option value="blue">Blue</option>
-            <option value="green">Green</option>
-          </select>
-          <button onclick="addTask()">Add</button>
-        </div>
-        <ul id="taskList"></ul>
-      </section>
-
-      <section class="notes">
-        <h1>Notes</h1>
-        <textarea id="notesArea" placeholder="Write your notes here..."></textarea>
-        <button onclick="saveNotes()">Save Notes</button>
-      </section>
+      <!-- Dynamic headers (days-of-week / hours) will be injected here -->
+      <div id="calendarHeader" class="calendar-header"></div>
+      <div id="calendarGrid" class="calendar-grid"></div>
     </main>
   </div>
+
+  <!-- Event modal -->
+  <dialog id="eventDialog" class="event-dialog">
+    <form id="eventForm" method="dialog">
+      <div class="dialog-header">
+        <h3 id="dialogTitle">Create event</h3>
+        <button type="button" id="closeDialog" class="icon-btn">✕</button>
+      </div>
+
+      <label class="field">
+        <span>Title</span>
+        <input required id="evTitle" type="text" placeholder="Event title"/>
+      </label>
+      <div class="field grid2">
+        <label>
+          <span>Date</span>
+          <input required id="evDate" type="date"/>
+        </label>
+        <label>
+          <span>All day</span>
+          <input id="evAllDay" type="checkbox"/>
+        </label>
+      </div>
+      <div class="field grid2" id="timeRow">
+        <label>
+          <span>Start</span>
+          <input id="evStart" type="time" value="09:00"/>
+        </label>
+        <label>
+          <span>End</span>
+          <input id="evEnd" type="time" value="10:00"/>
+        </label>
+      </div>
+      <div class="field grid2">
+        <label>
+          <span>Color</span>
+          <select id="evColor">
+            <option value="#1a73e8">Primary</option>
+            <option value="#34a853">Work</option>
+            <option value="#fbbc05">Personal</option>
+            <option value="#ea4335">Urgent</option>
+          </select>
+        </label>
+        <label>
+          <span>Description (optional)</span>
+          <input id="evDesc" type="text" placeholder=""/>
+        </label>
+      </div>
+
+      <div class="dialog-actions">
+        <button type="button" id="deleteEvent" class="danger" hidden>Delete</button>
+        <div style="flex:1"></div>
+        <button type="button" id="saveEvent" class="primary">Save</button>
+      </div>
+      <input type="hidden" id="evId"/>
+    </form>
+  </dialog>
+
+  <template id="monthCellTpl">
+    <div class="month-cell">
+      <div class="day-number"></div>
+      <div class="events"></div>
+    </div>
+  </template>
+
+  <template id="eventChipTpl">
+    <div class="event-chip"></div>
+  </template>
+
   <script src="script.js"></script>
 </body>
 </html>
